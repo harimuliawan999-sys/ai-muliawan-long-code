@@ -85,7 +85,7 @@ export function Sidebar(props: { sessionID: string; overlay?: boolean }) {
             <text fg={theme.textMuted}>
               <span style={{ fg: "#ff3333" }}>•</span>{" "}
               <span style={{ fg: "#ff3333" }}><b>AIMLC</b></span>{" "}
-              <span>{InstallationVersion}</span>
+              <span style={{ fg: theme.textMuted }}>by Hari Muliawan</span>
             </text>
           </TuiPluginRuntime.Slot>
         </box>

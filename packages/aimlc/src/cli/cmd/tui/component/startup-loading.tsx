@@ -2,7 +2,7 @@ import { createEffect, createSignal, onCleanup, Show } from "solid-js"
 import { Spinner } from "./spinner"
 
 export function StartupLoading(props: { ready: () => boolean }) {
-  const [show, setShow] = createSignal(false)
+  const [show, setShow] = createSignal(true) // langsung tampil, tutup layar hitam
   const [msgIdx, setMsgIdx] = createSignal(0)
 
   const msgs = [
@@ -25,7 +25,7 @@ export function StartupLoading(props: { ready: () => boolean }) {
       if (!show()) return
       if (hold) return
       // Tahan layar minimal 2.5 detik setelah ready supaya pesan terbaca
-      const left = 5000 - (Date.now() - stamp)
+      const left = 8000 - (Date.now() - stamp)
       if (left <= 0) { setShow(false); return }
       hold = setTimeout(() => { hold = undefined; setShow(false) }, left)
       return
