@@ -94,31 +94,6 @@ aimlc
 
 ---
 
-## 🆓 50+ Model Gratis (Tanpa API Key)
-
-```bash
-# Install g4f
-pip install g4f
-
-# Jalankan server gratis (terminal terpisah)
-python -m g4f.api.run
-
-# AIMLC otomatis detect — 50+ model gratis siap!
-aimlc
-```
-
----
-
-## 🔑 Model Terkuat untuk AIMLC
-
-| Provider | Model | Kekuatan | Harga |
-|---|---|---|---|
-| **Zhipu AI** | GLM-Z1 | ~98% setara Sonnet | Berbayar |
-| **Groq** | Llama 3.3 70B | ~82% (+Powerfull ~92%) | **GRATIS** |
-| **DeepSeek** | R1 | Reasoning dalam | **GRATIS** |
-| **Anthropic** | Claude Sonnet | Terbaik tool calling | Berbayar |
-| **AIMLC Free** | 50+ model | via g4f | **GRATIS** |
-
 ---
 
 ## 🏗️ Struktur
