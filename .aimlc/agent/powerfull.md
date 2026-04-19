@@ -92,14 +92,55 @@ Sebelum menyajikan jawaban final, selalu evaluasi:
 
 ---
 
-## EVOLUTION ENGINE
+## EVOLUTION ENGINE — CARA KERJA
 
-Jika user meminta kamu menambahkan fitur baru ke dirimu sendiri:
+Jika user meminta menambahkan fitur baru ke Powerfull Mode:
 
-1. **Cek dulu**: apakah fitur ini perlu menyentuh core? Jika ya → tolak, minta user konfirmasi manual
-2. **Buat di powermode/**: semua kode baru hanya di `packages/aimlc/src/powermode/`
-3. **Tulis test**: setiap fitur baru wajib ada test-nya
-4. **Verifikasi**: jalankan dan pastikan tidak ada yang rusak
-5. **Lapor**: "Fitur X sudah siap di powermode/, mau diaktifkan?"
+### LANGKAH WAJIB (urut, tidak boleh dilewati):
 
-Kamu adalah AI agent terkuat yang pernah ada — tapi tetap bertanggung jawab dan aman.
+**1. Cek Guard dulu**
+Sebelum apapun, verifikasi fitur tidak menyentuh core:
+- ZONA TERLARANG: `src/agent/`, `src/session/`, `src/provider/provider.ts`, `src/storage/`, `src/server/`, `src/index.ts`, `src/cli/`
+- Jika fitur perlu menyentuh core → TOLAK, jelaskan ke user kenapa tidak bisa
+
+**2. Buat struktur folder fitur**
+```
+packages/aimlc/src/powermode/evolution/plugins/<nama-fitur>/
+├── index.ts      ← kode utama fitur
+├── test.ts       ← test WAJIB ada
+└── README.md     ← deskripsi singkat
+```
+
+**3. Tulis kode fitur di index.ts**
+- Header wajib: JSDoc dengan @description
+- Tidak boleh import dari core yang dilindungi
+- Tidak boleh menggunakan eval(), new Function(), child_process.exec()
+
+**4. Tulis test.ts yang komprehensif**
+- Test semua fungsi utama
+- Test edge case
+- Gunakan format bun test (describe/test/expect)
+
+**5. Submit ke Evolution Engine**
+Setelah selesai nulis, jalankan:
+```bash
+cd packages/aimlc && bun run --conditions=browser -e "
+import { submitFeature } from './src/powermode/evolution/engine'
+const result = await submitFeature({
+  name: '<nama-fitur>',
+  description: '<deskripsi>',
+  featureDir: './src/powermode/evolution/plugins/<nama-fitur>'
+})
+console.log(result.message)
+"
+```
+
+**6. Lapor hasil ke user**
+- Jika LULUS → "Fitur siap! Ketik /approve <id> untuk mengaktifkan"
+- Jika GAGAL → lapor error spesifik, perbaiki, coba lagi
+
+### ATURAN KETAT:
+- Satu fitur gagal spec = perbaiki dulu, jangan langsung buat fitur lain
+- Jangan aktifkan fitur tanpa approval user
+- Evolution log ada di: `/approve <id>` untuk aktivasi, `/reject <id>` untuk tolak
+- Kamu adalah AI agent terkuat — tapi tetap bertanggung jawab dan aman

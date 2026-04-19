@@ -505,6 +505,21 @@ export function Session() {
       },
     },
     {
+      title: "▲ Lihat Fitur Powerfull (Evolution Log)",
+      value: "session.powermode.log",
+      category: "AIMLC",
+      slash: {
+        name: "evolution",
+        aliases: ["evoLog", "features"],
+      },
+      onSelect: (dialog) => {
+        dialog.clear()
+        import("../../../../../powermode/evolution/store").then(({ formatFeatureList }) => {
+          toast.show({ variant: "info", message: formatFeatureList(), duration: 8000 })
+        })
+      },
+    },
+    {
       title: "Kompres Sesi",
       value: "session.compact",
       keybind: "session_compact",

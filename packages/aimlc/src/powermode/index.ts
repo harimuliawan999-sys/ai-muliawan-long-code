@@ -10,6 +10,10 @@
 
 export { buildPowerfullSystemPrompt } from "./intelligence/layers"
 export { validateEvolutionRequest, getGuardReport, isCoreFile } from "./evolution/guard"
+export { validateFeatureSpec, formatSpecReport } from "./evolution/spec"
+export { runFeatureTests, formatTestReport } from "./evolution/tester"
+export { submitFeature, activateFeature, denyFeature, formatFeatureList } from "./evolution/engine"
+export { addFeature, approveFeature, rejectFeature, getPendingFeatures, getApprovedFeatures, getAllFeatures } from "./evolution/store"
 export { POWERMODE_BANNER, POWERMODE_EXIT_BANNER, getModelBadge, printPowermodeStatus } from "./ui/banner"
 export { POWERMODE_TRIGGER, POWERMODE_EXIT, POWERMODE_VERSION, INTELLIGENCE_CONFIG } from "./config"
 
