@@ -138,9 +138,11 @@ const cli = yargs(args)
     } else {
       process.stderr.write("Memuat AIMLC..." + EOL)
     }
+    let charTick = 0
     const startupSpinner = tty ? setInterval(() => {
       spinIdx = (spinIdx + 1) % spinFrames.length
-      if (spinIdx === 0) msgIdx = (msgIdx + 1) % loadingMsgs.length
+      charTick++
+      if (charTick >= 15) { charTick = 0; msgIdx = (msgIdx + 1) % loadingMsgs.length }
       process.stderr.write(`\r${red}${spinFrames[spinIdx]}${reset} ${bold}${loadingMsgs[msgIdx]}${reset}          `)
     }, 80) : undefined
 

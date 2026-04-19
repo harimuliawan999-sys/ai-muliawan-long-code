@@ -1,9 +1,7 @@
-import { createEffect, createMemo, createSignal, onCleanup, Show } from "solid-js"
-import { useTheme } from "../context/theme"
+import { createEffect, createSignal, onCleanup, Show } from "solid-js"
 import { Spinner } from "./spinner"
 
 export function StartupLoading(props: { ready: () => boolean }) {
-  const theme = useTheme().theme
   const [show, setShow] = createSignal(false)
   const [msgIdx, setMsgIdx] = createSignal(0)
 
@@ -12,32 +10,30 @@ export function StartupLoading(props: { ready: () => boolean }) {
     "Menginisialisasi sistem AI...",
     "Menyiapkan tools dan provider...",
     "Menghubungkan model AI...",
-    "Memverifikasi konfigurasi...",
-    "Memuat plugin...",
+    "Memuat konfigurasi...",
     "Menyiapkan sesi...",
     "Hampir siap...",
   ]
 
   let ticker: ReturnType<typeof setInterval> | undefined
-  let wait: ReturnType<typeof setTimeout> | undefined
   let hold: ReturnType<typeof setTimeout> | undefined
   let stamp = 0
 
   createEffect(() => {
     if (props.ready()) {
       if (ticker) { clearInterval(ticker); ticker = undefined }
-      if (wait) { clearTimeout(wait); wait = undefined }
       if (!show()) return
       if (hold) return
-      const left = 1500 - (Date.now() - stamp)
+      // Tahan layar minimal 2.5 detik setelah ready supaya pesan terbaca
+      const left = 2500 - (Date.now() - stamp)
       if (left <= 0) { setShow(false); return }
       hold = setTimeout(() => { hold = undefined; setShow(false) }, left)
       return
     }
-    if (!ticker) {
-      ticker = setInterval(() => setMsgIdx((i) => (i + 1) % msgs.length), 900)
-    }
     if (hold) { clearTimeout(hold); hold = undefined }
+    if (!ticker) {
+      ticker = setInterval(() => setMsgIdx((i) => (i + 1) % msgs.length), 1200)
+    }
     if (show()) return
     stamp = Date.now()
     setShow(true)
@@ -45,7 +41,6 @@ export function StartupLoading(props: { ready: () => boolean }) {
 
   onCleanup(() => {
     if (ticker) clearInterval(ticker)
-    if (wait) clearTimeout(wait)
     if (hold) clearTimeout(hold)
   })
 
@@ -55,29 +50,34 @@ export function StartupLoading(props: { ready: () => boolean }) {
         position="absolute"
         zIndex={9999}
         left={0} right={0} top={0} bottom={0}
-        backgroundColor={"#0a0a0a"}
+        backgroundColor={"#050505"}
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
       >
-        {/* Logo AIMLC */}
-        <box flexDirection="column" alignItems="center" marginBottom={2}>
-          <text fg={"#ff2222"}>  ╔══════════════════════════════╗  </text>
-          <text fg={"#ff2222"}>  ║                              ║  </text>
-          <text bold fg={"#ff3333"}>  ║   A  I  M  L  C             ║  </text>
-          <text fg={"#ff3333"}>  ║   AI Muliawan Long Code      ║  </text>
-          <text fg={"#ff2222"}>  ║                              ║  </text>
-          <text fg={"#ff2222"}>  ╚══════════════════════════════╝  </text>
+        {/* Logo besar AIMLC */}
+        <box flexDirection="column" alignItems="center" marginBottom={1}>
+          <text bold fg={"#cc0000"}> ░█████╗░██╗███╗░░░███╗██╗░░░░░░█████╗░</text>
+          <text bold fg={"#dd1111"}> ██╔══██╗██║████╗░████║██║░░░░░██╔══██╗</text>
+          <text bold fg={"#ee2222"}> ███████║██║██╔████╔██║██║░░░░░██║░░╚═╝</text>
+          <text bold fg={"#ff3333"}> ██╔══██║██║██║╚██╔╝██║██║░░░░░██║░░██╗</text>
+          <text bold fg={"#ff5555"}> ██║░░██║██║██║░╚═╝░██║███████╗╚█████╔╝</text>
+          <text bold fg={"#ff7777"}> ╚═╝░░╚═╝╚═╝╚═╝░░░░╚═╝╚══════╝░╚════╝░</text>
+        </box>
+
+        {/* Garis */}
+        <box marginBottom={1}>
+          <text fg={"#441111"}>  ════════════════════════════════════  </text>
         </box>
 
         {/* Nama & author */}
-        <box flexDirection="column" alignItems="center" marginBottom={3}>
+        <box flexDirection="column" alignItems="center" marginBottom={2}>
           <text bold fg={"#ffffff"}>  AI Muliawan Long Code  </text>
-          <text fg={"#666666"}>  by Hari Muliawan, S.Mat  </text>
+          <text fg={"#555555"}>  by Hari Muliawan, S.Mat  </text>
         </box>
 
-        {/* Spinner + teks loading */}
-        <box flexDirection="row" alignItems="center">
+        {/* Spinner loading */}
+        <box>
           <Spinner color={"#ff3333"}>{msgs[msgIdx()]}</Spinner>
         </box>
       </box>
