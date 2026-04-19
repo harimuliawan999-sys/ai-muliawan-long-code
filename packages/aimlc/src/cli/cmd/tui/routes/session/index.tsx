@@ -1430,25 +1430,14 @@ function ReasoningPart(props: { last: boolean; part: ReasoningPart; message: Ass
     return props.part.text.replace("[REDACTED]", "").trim()
   })
   return (
-    <Show when={content() && ctx.showThinking()}>
+    <Show when={content()}>
       <box
         id={"text-" + props.part.id}
-        paddingLeft={2}
+        paddingLeft={1}
         marginTop={1}
-        flexDirection="column"
-        border={["left"]}
-        customBorderChars={SplitBorder.customBorderChars}
-        borderColor={theme.backgroundElement}
+        flexDirection="row"
       >
-        <code
-          filetype="markdown"
-          drawUnstyledText={false}
-          streaming={true}
-          syntaxStyle={subtleSyntax()}
-          content={"_Thinking:_ " + content()}
-          conceal={ctx.conceal()}
-          fg={theme.textMuted}
-        />
+        <text fg={theme.textMuted}>▣  Sedang berpikir...</text>
       </box>
     </Show>
   )

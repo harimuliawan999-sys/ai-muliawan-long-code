@@ -123,6 +123,24 @@ const cli = yargs(args)
       const muted = "\x1b[0;2m"
       const reset = "\x1b[0m"
       const bold = "\x1b[1m"
+      const cyan = "\x1b[96m"
+      const dim = "\x1b[2m"
+
+      // ── Intro JARVIS-style ─────────────────────────────────────────
+      if (tty) {
+        process.stderr.write("\x1b[2J\x1b[H") // clear screen
+        process.stderr.write(EOL)
+        process.stderr.write(`${red}${bold}  █████╗ ██╗███╗   ███╗██╗      ██████╗ ${reset}` + EOL)
+        process.stderr.write(`${red}${bold} ██╔══██╗██║████╗ ████║██║     ██╔════╝ ${reset}` + EOL)
+        process.stderr.write(`${red}${bold} ███████║██║██╔████╔██║██║     ██║      ${reset}` + EOL)
+        process.stderr.write(`${red}${bold} ██╔══██║██║██║╚██╔╝██║██║     ██║      ${reset}` + EOL)
+        process.stderr.write(`${red}${bold} ██║  ██║██║██║ ╚═╝ ██║███████╗╚██████╗ ${reset}` + EOL)
+        process.stderr.write(`${red}${bold} ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝╚══════╝ ╚═════╝ ${reset}` + EOL)
+        process.stderr.write(EOL)
+        process.stderr.write(`${bold}  AI Muliawan Long Code${reset}  ${dim}by Hari Muliawan, S.Mat${reset}` + EOL)
+        process.stderr.write(`${dim}  ─────────────────────────────────────────${reset}` + EOL)
+        process.stderr.write(EOL)
+      }
       const spinFrames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
       const loadingMsgs = [
         "Menginisialisasi AIMLC...",
