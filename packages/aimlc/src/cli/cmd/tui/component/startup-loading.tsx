@@ -5,57 +5,84 @@ import { Spinner } from "./spinner"
 export function StartupLoading(props: { ready: () => boolean }) {
   const theme = useTheme().theme
   const [show, setShow] = createSignal(false)
-  const text = createMemo(() => (props.ready() ? "Menyiapkan sesi..." : "Memuat AIMLC..."))
-  let wait: NodeJS.Timeout | undefined
-  let hold: NodeJS.Timeout | undefined
+  const [msgIdx, setMsgIdx] = createSignal(0)
+
+  const msgs = [
+    "Memuat AIMLC...",
+    "Menginisialisasi sistem AI...",
+    "Menyiapkan tools dan provider...",
+    "Menghubungkan model AI...",
+    "Memverifikasi konfigurasi...",
+    "Memuat plugin...",
+    "Menyiapkan sesi...",
+    "Hampir siap...",
+  ]
+
+  let ticker: ReturnType<typeof setInterval> | undefined
+  let wait: ReturnType<typeof setTimeout> | undefined
+  let hold: ReturnType<typeof setTimeout> | undefined
   let stamp = 0
 
   createEffect(() => {
     if (props.ready()) {
-      if (wait) {
-        clearTimeout(wait)
-        wait = undefined
-      }
+      if (ticker) { clearInterval(ticker); ticker = undefined }
+      if (wait) { clearTimeout(wait); wait = undefined }
       if (!show()) return
       if (hold) return
-
-      const left = 3000 - (Date.now() - stamp)
-      if (left <= 0) {
-        setShow(false)
-        return
-      }
-
-      hold = setTimeout(() => {
-        hold = undefined
-        setShow(false)
-      }, left).unref()
+      const left = 1500 - (Date.now() - stamp)
+      if (left <= 0) { setShow(false); return }
+      hold = setTimeout(() => { hold = undefined; setShow(false) }, left)
       return
     }
-
-    if (hold) {
-      clearTimeout(hold)
-      hold = undefined
+    if (!ticker) {
+      ticker = setInterval(() => setMsgIdx((i) => (i + 1) % msgs.length), 900)
     }
+    if (hold) { clearTimeout(hold); hold = undefined }
     if (show()) return
     if (wait) return
-
-    wait = setTimeout(() => {
-      wait = undefined
-      stamp = Date.now()
-      setShow(true)
-    }, 500).unref()
+    wait = setTimeout(() => { wait = undefined; stamp = Date.now(); setShow(true) }, 200)
   })
 
   onCleanup(() => {
+    if (ticker) clearInterval(ticker)
     if (wait) clearTimeout(wait)
     if (hold) clearTimeout(hold)
   })
 
   return (
     <Show when={show()}>
-      <box position="absolute" zIndex={5000} left={0} right={0} bottom={1} justifyContent="center" alignItems="center">
-        <box backgroundColor={theme.backgroundPanel} paddingLeft={1} paddingRight={1}>
-          <Spinner color={"red"}>{text()}</Spinner>
+      <box
+        position="absolute"
+        zIndex={9999}
+        left={0} right={0} top={0} bottom={0}
+        backgroundColor={"#0a0a0a"}
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        {/* Logo AIMLC */}
+        <box flexDirection="column" alignItems="center" marginBottom={2}>
+          <text bold fg={"#ff2222"}>  ─────────────────────────────  </text>
+          <text bold fg={"#ff2222"}>                                  </text>
+          <text bold fg={"#ff3333"}> █████╗ ██╗███╗  ███╗██╗  ██████╗</text>
+          <text bold fg={"#ff3333"}> ██╔══╝ ██║████╗████║██║ ██╔════╝</text>
+          <text bold fg={"#ff4444"}> █████╗ ██║██╔██╔██║██║ ██║     </text>
+          <text bold fg={"#ff4444"}> ██╔══╝ ██║██║╚═╝██║██║ ██║     </text>
+          <text bold fg={"#ff5555"}> ██║    ██║██║   ██║███████╚██████╗</text>
+          <text bold fg={"#ff5555"}> ╚═╝    ╚═╝╚═╝   ╚═╝╚══════╝╚═════╝</text>
+          <text bold fg={"#ff2222"}>                                  </text>
+          <text bold fg={"#ff2222"}>  ─────────────────────────────  </text>
+        </box>
+
+        {/* Nama & author */}
+        <box flexDirection="column" alignItems="center" marginBottom={3}>
+          <text bold fg={"#ffffff"}>  AI Muliawan Long Code  </text>
+          <text fg={"#666666"}>  by Hari Muliawan, S.Mat  </text>
+        </box>
+
+        {/* Spinner + teks loading */}
+        <box flexDirection="row" alignItems="center">
+          <Spinner color={"#ff3333"}>{msgs[msgIdx()]}</Spinner>
         </box>
       </box>
     </Show>

@@ -7,6 +7,7 @@ import {
   For,
   Match,
   on,
+  onCleanup,
   onMount,
   Show,
   Switch,
@@ -1422,13 +1423,31 @@ const PART_MAPPING = {
 }
 
 function ReasoningPart(props: { last: boolean; part: ReasoningPart; message: AssistantMessage }) {
-  const { theme, subtleSyntax } = useTheme()
-  const ctx = use()
-  const content = createMemo(() => {
-    // Filter out redacted reasoning chunks from OpenRouter
-    // OpenRouter sends encrypted reasoning data that appears as [REDACTED]
-    return props.part.text.replace("[REDACTED]", "").trim()
+  const { theme } = useTheme()
+  const spinFrames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+  const [spinIdx, setSpinIdx] = createSignal(0)
+  let ticker: ReturnType<typeof setInterval> | undefined
+
+  const content = createMemo(() => props.part.text.replace("[REDACTED]", "").trim())
+
+  // Judul singkat: ambil kalimat pertama dari isi pikiran, maks 60 karakter
+  const summary = createMemo(() => {
+    const raw = content()
+    if (!raw) return ""
+    const first = raw.split(/[.\n]/)[0].trim()
+    return first.length > 60 ? first.slice(0, 57) + "..." : first
   })
+
+  createEffect(() => {
+    if (props.last && content()) {
+      if (!ticker) ticker = setInterval(() => setSpinIdx((i) => (i + 1) % spinFrames.length), 80)
+    } else {
+      if (ticker) { clearInterval(ticker); ticker = undefined }
+    }
+  })
+
+  onCleanup(() => { if (ticker) clearInterval(ticker) })
+
   return (
     <Show when={content()}>
       <box
@@ -1436,8 +1455,13 @@ function ReasoningPart(props: { last: boolean; part: ReasoningPart; message: Ass
         paddingLeft={1}
         marginTop={1}
         flexDirection="row"
+        gap={1}
       >
-        <text fg={theme.textMuted}>▣  Sedang berpikir...</text>
+        <text fg={"#ff4444"}>{spinFrames[spinIdx()]}</text>
+        <text fg={theme.textMuted} bold>Sedang berpikir</text>
+        <Show when={summary()}>
+          <text fg={theme.textMuted}> — {summary()}</text>
+        </Show>
       </box>
     </Show>
   )
