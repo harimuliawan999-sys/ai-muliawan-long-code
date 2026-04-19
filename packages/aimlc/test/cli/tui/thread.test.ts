@@ -35,7 +35,7 @@ function setup() {
     mdns: false,
     port: 0,
     hostname: "127.0.0.1",
-    mdnsDomain: "opencode.local",
+    mdnsDomain: "aimlc.local",
     cors: [],
   })
   spyOn(Win32, "win32DisableProcessedInput").mockImplementation(() => {})
@@ -62,8 +62,8 @@ describe("tui thread", () => {
       port: 0,
       hostname: "127.0.0.1",
       mdns: false,
-      "mdns-domain": "opencode.local",
-      mdnsDomain: "opencode.local",
+      "mdns-domain": "aimlc.local",
+      mdnsDomain: "aimlc.local",
       cors: [],
     }
     return TuiThreadCommand.handler(args)
