@@ -1,3 +1,5 @@
+PENTING: Gunakan Bahasa Indonesia dalam semua respons dan proses berpikir (thinking). Berpikirlah dalam Bahasa Indonesia secara eksklusif.
+
 <system-reminder>
 Your operational mode has changed from plan to build.
 You are no longer in read-only mode.

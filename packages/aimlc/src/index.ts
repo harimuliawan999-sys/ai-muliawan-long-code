@@ -118,9 +118,9 @@ const cli = yargs(args)
     const marker = path.join(Global.Path.data, "opencode.db")
     if (!(await Filesystem.exists(marker))) {
       const tty = process.stderr.isTTY
-      process.stderr.write("Performing one time database migration, may take a few minutes..." + EOL)
+      process.stderr.write("Memuat data AIMLC, harap tunggu sebentar..." + EOL)
       const width = 36
-      const orange = "\x1b[38;5;214m"
+      const orange = "\x1b[38;5;196m"
       const muted = "\x1b[0;2m"
       const reset = "\x1b[0m"
       let last = -1
@@ -149,7 +149,7 @@ const cli = yargs(args)
           process.stderr.write(`sqlite-migration:done${EOL}`)
         }
       }
-      process.stderr.write("Database migration complete." + EOL)
+      process.stderr.write("AIMLC siap digunakan." + EOL)
     }
   })
   .usage("")
