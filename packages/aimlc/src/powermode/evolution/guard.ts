@@ -15,14 +15,16 @@ export function validateEvolutionRequest(targetFile: string): {
   allowed: boolean
   reason?: string
 } {
-  if (isCoreFile(targetFile)) {
+  const normalized = targetFile.replace(/\\/g, "/")
+
+  if (isCoreFile(normalized)) {
     return {
       allowed: false,
       reason: `❌ DITOLAK: File "${targetFile}" adalah bagian dari core AIMLC yang dilindungi. Powerfull Mode hanya boleh menulis ke packages/aimlc/src/powermode/`,
     }
   }
 
-  if (!targetFile.includes("powermode/")) {
+  if (!normalized.includes("powermode/") && !normalized.includes("powermode\\")) {
     return {
       allowed: false,
       reason: `❌ DITOLAK: File baru hanya boleh dibuat di dalam folder powermode/. Ini menjaga AIMLC asli tetap aman.`,

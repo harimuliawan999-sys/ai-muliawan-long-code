@@ -22,7 +22,8 @@ export type SpecCheck = {
   critical: boolean   // kalau critical gagal → langsung reject
 }
 
-const POWERMODE_ROOT = path.resolve(process.cwd(), "packages/aimlc/src/powermode")
+// __dirname = src/powermode/evolution/ → naik satu level = src/powermode/
+const POWERMODE_ROOT = path.resolve(import.meta.dirname, "..")
 
 export async function validateFeatureSpec(featureDir: string): Promise<SpecResult> {
   const checks: SpecCheck[] = []
