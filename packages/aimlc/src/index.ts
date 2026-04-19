@@ -155,14 +155,14 @@ const cli = yargs(args)
       })
     }
 
-    // Tahan spinner minimal 2.5 detik supaya pesan terbaca
+    // Tampilkan pesan loading minimal 6 detik agar user bisa baca
     const elapsed = Date.now() - startTime
-    if (elapsed < 4000) await new Promise(r => setTimeout(r, 4000 - elapsed))
+    if (elapsed < 6000) await new Promise(r => setTimeout(r, 6000 - elapsed))
     if (startupSpinner) clearInterval(startupSpinner)
     if (tty) {
       process.stderr.write("\r" + " ".repeat(60) + "\r")
       process.stderr.write(`${red}✓${reset} ${bold}AIMLC siap digunakan.${reset}` + EOL)
-      await new Promise(r => setTimeout(r, 1200))
+      await new Promise(r => setTimeout(r, 2000)) // tahan 2 detik sebelum TUI
       process.stderr.write("\x1b[?25h")
     }
   })
