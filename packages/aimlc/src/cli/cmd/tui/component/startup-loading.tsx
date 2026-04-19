@@ -39,8 +39,8 @@ export function StartupLoading(props: { ready: () => boolean }) {
     }
     if (hold) { clearTimeout(hold); hold = undefined }
     if (show()) return
-    if (wait) return
-    wait = setTimeout(() => { wait = undefined; stamp = Date.now(); setShow(true) }, 200)
+    stamp = Date.now()
+    setShow(true)
   })
 
   onCleanup(() => {

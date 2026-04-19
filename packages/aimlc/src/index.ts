@@ -115,66 +115,44 @@ const cli = yargs(args)
       run_id: processMetadata.runID,
     })
 
+    const tty = process.stderr.isTTY
+    const red = "\x1b[38;5;196m"
+    const muted = "\x1b[0;2m"
+    const reset = "\x1b[0m"
+    const bold = "\x1b[1m"
+    const dim = "\x1b[2m"
+    const spinFrames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+    const loadingMsgs = [
+      "Memuat AIMLC...",
+      "Menginisialisasi sistem AI...",
+      "Menyiapkan tools dan provider...",
+      "Menghubungkan model AI...",
+      "Memuat konfigurasi...",
+      "Hampir siap...",
+    ]
+    let spinIdx = 0
+    let msgIdx = 0
+    if (tty) {
+      process.stderr.write("\x1b[?25l")
+      process.stderr.write(`\r${red}${spinFrames[0]}${reset} ${bold}${loadingMsgs[0]}${reset}`)
+    } else {
+      process.stderr.write("Memuat AIMLC..." + EOL)
+    }
+    const startupSpinner = tty ? setInterval(() => {
+      spinIdx = (spinIdx + 1) % spinFrames.length
+      if (spinIdx === 0) msgIdx = (msgIdx + 1) % loadingMsgs.length
+      process.stderr.write(`\r${red}${spinFrames[spinIdx]}${reset} ${bold}${loadingMsgs[msgIdx]}${reset}          `)
+    }, 80) : undefined
+
     const marker = path.join(Global.Path.data, "opencode.db")
     if (!(await Filesystem.exists(marker))) {
-      const tty = process.stderr.isTTY
       const width = 36
-      const red = "\x1b[38;5;196m"
-      const muted = "\x1b[0;2m"
-      const reset = "\x1b[0m"
-      const bold = "\x1b[1m"
-      const cyan = "\x1b[96m"
-      const dim = "\x1b[2m"
-
-      // ── Intro JARVIS-style ─────────────────────────────────────────
-      if (tty) {
-        process.stderr.write("\x1b[2J\x1b[H") // clear screen
-        process.stderr.write(EOL)
-        process.stderr.write(`${red}${bold}  █████╗ ██╗███╗   ███╗██╗      ██████╗ ${reset}` + EOL)
-        process.stderr.write(`${red}${bold} ██╔══██╗██║████╗ ████║██║     ██╔════╝ ${reset}` + EOL)
-        process.stderr.write(`${red}${bold} ███████║██║██╔████╔██║██║     ██║      ${reset}` + EOL)
-        process.stderr.write(`${red}${bold} ██╔══██║██║██║╚██╔╝██║██║     ██║      ${reset}` + EOL)
-        process.stderr.write(`${red}${bold} ██║  ██║██║██║ ╚═╝ ██║███████╗╚██████╗ ${reset}` + EOL)
-        process.stderr.write(`${red}${bold} ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝╚══════╝ ╚═════╝ ${reset}` + EOL)
-        process.stderr.write(EOL)
-        process.stderr.write(`${bold}  AI Muliawan Long Code${reset}  ${dim}by Hari Muliawan, S.Mat${reset}` + EOL)
-        process.stderr.write(`${dim}  ─────────────────────────────────────────${reset}` + EOL)
-        process.stderr.write(EOL)
-      }
-      const spinFrames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
-      const loadingMsgs = [
-        "Menginisialisasi AIMLC...",
-        "Memuat komponen AI...",
-        "Menyiapkan database...",
-        "Mengonfigurasi tools...",
-        "Menghubungkan provider...",
-        "Memverifikasi sistem...",
-        "Hampir selesai...",
-      ]
-      let spinIdx = 0
-      let msgIdx = 0
-      let barStarted = false
-      if (tty) {
-        process.stderr.write("\x1b[?25l")
-        process.stderr.write(`\r${red}${spinFrames[0]}${reset} ${bold}${loadingMsgs[0]}${reset}`)
-      } else {
-        process.stderr.write("Memuat data AIMLC, harap tunggu sebentar..." + EOL)
-      }
-      const spinner = tty ? setInterval(() => {
-        if (barStarted) return
-        spinIdx = (spinIdx + 1) % spinFrames.length
-        if (spinIdx === 0) msgIdx = (msgIdx + 1) % loadingMsgs.length
-        process.stderr.write(`\r${red}${spinFrames[spinIdx]}${reset} ${bold}${loadingMsgs[msgIdx]}${reset}          `)
-      }, 80) : undefined
+      if (startupSpinner) clearInterval(startupSpinner)
+      if (tty) process.stderr.write("\r" + " ".repeat(60) + "\r")
       let last = -1
       try {
         await JsonMigration.run(drizzle({ client: Database.Client().$client }), {
           progress: (event) => {
-            if (!barStarted && tty) {
-              barStarted = true
-              if (spinner) clearInterval(spinner)
-              process.stderr.write("\r" + " ".repeat(50) + "\r")
-            }
             const percent = Math.floor((event.current / event.total) * 100)
             if (percent === last && event.current !== event.total) return
             last = percent
@@ -191,13 +169,16 @@ const cli = yargs(args)
           },
         })
       } finally {
-        if (spinner) clearInterval(spinner)
         if (tty) process.stderr.write("\x1b[?25h")
-        else {
-          process.stderr.write(`sqlite-migration:done${EOL}`)
-        }
+        else process.stderr.write(`sqlite-migration:done${EOL}`)
       }
+    } else {
+      if (startupSpinner) clearInterval(startupSpinner)
+      if (tty) process.stderr.write("\r" + " ".repeat(60) + "\r")
+    }
+    if (tty) {
       process.stderr.write(`${red}✓${reset} ${bold}AIMLC siap digunakan.${reset}` + EOL)
+      process.stderr.write("\x1b[?25h")
     }
   })
   .usage("")
