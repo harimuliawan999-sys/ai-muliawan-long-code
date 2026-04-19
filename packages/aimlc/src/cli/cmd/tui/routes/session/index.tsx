@@ -475,6 +475,23 @@ export function Session() {
       },
     },
     {
+      title: "▲ AIMLC Powerfull Mode",
+      value: "session.powermode",
+      category: "AIMLC",
+      slash: {
+        name: "powerfullmode",
+        aliases: ["powermode", "powerful"],
+      },
+      onSelect: (dialog) => {
+        dialog.clear()
+        toast.show({
+          variant: "info",
+          message: "▲ AIMLC Powerfull Mode aktif — 6 Intelligence Layers ON • Core terlindungi",
+          duration: 5000,
+        })
+      },
+    },
+    {
       title: "Kompres Sesi",
       value: "session.compact",
       keybind: "session_compact",
