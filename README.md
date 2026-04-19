@@ -74,7 +74,7 @@
 └─────────────────────────────────────────────────────┘
 ```
 
-**Model biasa + Powerfull Mode ≈ setara Claude Sonnet / GPT-4o**
+**Model biasa + Powerfull Mode ≈ model cerdas**
 
 ---
 
@@ -107,23 +107,6 @@ ai-muliawan-long-code/
 ├── ailmc/                   ← AIMLC Python v3 APEX
 └── .aimlc/agent/powerfull.md ← Agent Powerfull config
 ```
-
----
-
-## 📊 Perbandingan dengan Kompetitor
-
-<div align="center">
-
-| | 🤖 AIMLC | Claude Code | Cursor | Windsurf |
-|:--|:--:|:--:|:--:|:--:|
-| **Harga** | **GRATIS** | $20-100/bln | $20/bln | $15/bln |
-| **Powerfull Mode** | **✅ Eksklusif** | ❌ | ❌ | ❌ |
-| **Model Gratis** | **50+** | 0 | 0 | 0 |
-| **Open Source** | **✅** | ❌ | ❌ | ❌ |
-| **Self-Evolution** | **✅** | ❌ | ❌ | ❌ |
-| **Semua Provider** | **75+** | 1 | ~10 | ~5 |
-
-</div>
 
 ---
 
