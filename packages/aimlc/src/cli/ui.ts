@@ -61,14 +61,14 @@ export function logo(pad?: string) {
   const result: string[] = []
   const reset = "\x1b[0m"
   const left = {
-    fg: "\x1b[90m",
-    shadow: "\x1b[38;5;235m",
-    bg: "\x1b[48;5;235m",
+    fg: "\x1b[91m",       // merah terang — kiri AIMLC
+    shadow: "\x1b[38;5;88m",
+    bg: "\x1b[48;5;88m",
   }
   const right = {
-    fg: reset,
-    shadow: "\x1b[38;5;238m",
-    bg: "\x1b[48;5;238m",
+    fg: "\x1b[93m",       // kuning keemasan — kanan AIMLC
+    shadow: "\x1b[38;5;130m",
+    bg: "\x1b[48;5;130m",
   }
   const gap = " "
   const draw = (line: string, fg: string, shadow: string, bg: string) => {
