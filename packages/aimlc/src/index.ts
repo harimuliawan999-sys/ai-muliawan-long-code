@@ -118,16 +118,45 @@ const cli = yargs(args)
     const marker = path.join(Global.Path.data, "opencode.db")
     if (!(await Filesystem.exists(marker))) {
       const tty = process.stderr.isTTY
-      process.stderr.write("Memuat data AIMLC, harap tunggu sebentar..." + EOL)
       const width = 36
-      const orange = "\x1b[38;5;196m"
+      const red = "\x1b[38;5;196m"
       const muted = "\x1b[0;2m"
       const reset = "\x1b[0m"
+      const bold = "\x1b[1m"
+      const spinFrames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+      const loadingMsgs = [
+        "Menginisialisasi AIMLC...",
+        "Memuat komponen AI...",
+        "Menyiapkan database...",
+        "Mengonfigurasi tools...",
+        "Menghubungkan provider...",
+        "Memverifikasi sistem...",
+        "Hampir selesai...",
+      ]
+      let spinIdx = 0
+      let msgIdx = 0
+      let barStarted = false
+      if (tty) {
+        process.stderr.write("\x1b[?25l")
+        process.stderr.write(`\r${red}${spinFrames[0]}${reset} ${bold}${loadingMsgs[0]}${reset}`)
+      } else {
+        process.stderr.write("Memuat data AIMLC, harap tunggu sebentar..." + EOL)
+      }
+      const spinner = tty ? setInterval(() => {
+        if (barStarted) return
+        spinIdx = (spinIdx + 1) % spinFrames.length
+        if (spinIdx === 0) msgIdx = (msgIdx + 1) % loadingMsgs.length
+        process.stderr.write(`\r${red}${spinFrames[spinIdx]}${reset} ${bold}${loadingMsgs[msgIdx]}${reset}          `)
+      }, 80) : undefined
       let last = -1
-      if (tty) process.stderr.write("\x1b[?25l")
       try {
         await JsonMigration.run(drizzle({ client: Database.Client().$client }), {
           progress: (event) => {
+            if (!barStarted && tty) {
+              barStarted = true
+              if (spinner) clearInterval(spinner)
+              process.stderr.write("\r" + " ".repeat(50) + "\r")
+            }
             const percent = Math.floor((event.current / event.total) * 100)
             if (percent === last && event.current !== event.total) return
             last = percent
@@ -135,7 +164,7 @@ const cli = yargs(args)
               const fill = Math.round((percent / 100) * width)
               const bar = `${"■".repeat(fill)}${"･".repeat(width - fill)}`
               process.stderr.write(
-                `\r${orange}${bar} ${percent.toString().padStart(3)}%${reset} ${muted}${event.label.padEnd(12)} ${event.current}/${event.total}${reset}`,
+                `\r${red}${bar} ${percent.toString().padStart(3)}%${reset} ${muted}${event.label.padEnd(12)} ${event.current}/${event.total}${reset}`,
               )
               if (event.current === event.total) process.stderr.write("\n")
             } else {
@@ -144,12 +173,13 @@ const cli = yargs(args)
           },
         })
       } finally {
+        if (spinner) clearInterval(spinner)
         if (tty) process.stderr.write("\x1b[?25h")
         else {
           process.stderr.write(`sqlite-migration:done${EOL}`)
         }
       }
-      process.stderr.write("AIMLC siap digunakan." + EOL)
+      process.stderr.write(`${red}✓${reset} ${bold}AIMLC siap digunakan.${reset}` + EOL)
     }
   })
   .usage("")
