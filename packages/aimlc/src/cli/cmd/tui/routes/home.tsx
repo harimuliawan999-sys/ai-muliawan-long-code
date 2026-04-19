@@ -1,6 +1,6 @@
 import { Prompt, type PromptRef } from "@tui/component/prompt"
 import { createEffect, createSignal } from "solid-js"
-import { Logo } from "../component/logo"
+import { useTheme } from "../context/theme"
 import { useProject } from "../context/project"
 import { useSync } from "../context/sync"
 import { Toast } from "../ui/toast"
@@ -24,6 +24,7 @@ export function Home() {
   const [ref, setRef] = createSignal<PromptRef | undefined>()
   const args = useArgs()
   const local = useLocal()
+  const { theme } = useTheme()
   let sent = false
 
   const bind = (r: PromptRef | undefined) => {
@@ -59,7 +60,17 @@ export function Home() {
         <box height={4} minHeight={0} flexShrink={1} />
         <box flexShrink={0}>
           <TuiPluginRuntime.Slot name="home_logo" mode="replace">
-            <Logo />
+            <box flexDirection="column" alignItems="center">
+              <text bold fg={"#cc0000"}> ░█████╗░██╗███╗░░░███╗██╗░░░░░░█████╗░</text>
+              <text bold fg={"#dd1111"}> ██╔══██╗██║████╗░████║██║░░░░░██╔══██╗</text>
+              <text bold fg={"#ee2222"}> ███████║██║██╔████╔██║██║░░░░░██║░░╚═╝</text>
+              <text bold fg={"#ff3333"}> ██╔══██║██║██║╚██╔╝██║██║░░░░░██║░░██╗</text>
+              <text bold fg={"#ff5555"}> ██║░░██║██║██║░╚═╝░██║███████╗╚█████╔╝</text>
+              <text bold fg={"#ff7777"}> ╚═╝░░╚═╝╚═╝╚═╝░░░░╚═╝╚══════╝░╚════╝░</text>
+              <text fg={"#441111"}>  ══════════════════════════════════════  </text>
+              <text bold fg={"#ffffff"}>   AI Muliawan Long Code   </text>
+              <text fg={"#444444"}>   by Hari Muliawan, S.Mat   </text>
+            </box>
           </TuiPluginRuntime.Slot>
         </box>
         <box height={1} minHeight={0} flexShrink={1} />

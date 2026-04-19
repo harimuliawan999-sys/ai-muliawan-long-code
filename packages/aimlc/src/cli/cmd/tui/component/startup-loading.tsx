@@ -25,7 +25,7 @@ export function StartupLoading(props: { ready: () => boolean }) {
       if (!show()) return
       if (hold) return
       // Tahan layar minimal 2.5 detik setelah ready supaya pesan terbaca
-      const left = 2500 - (Date.now() - stamp)
+      const left = 4000 - (Date.now() - stamp)
       if (left <= 0) { setShow(false); return }
       hold = setTimeout(() => { hold = undefined; setShow(false) }, left)
       return

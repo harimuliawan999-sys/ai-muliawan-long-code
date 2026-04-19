@@ -182,11 +182,7 @@ const cli = yargs(args)
       if (startupSpinner) clearInterval(startupSpinner)
       if (tty) process.stderr.write("\r" + " ".repeat(60) + "\r")
     }
-    if (tty) {
-      process.stderr.write(`${red}✓${reset} ${bold}AIMLC siap digunakan.${reset}` + EOL)
-      await new Promise(r => setTimeout(r, 800))
-      process.stderr.write("\x1b[?25h")
-    }
+    if (tty) process.stderr.write("\x1b[?25h")
   })
   .usage("")
   .completion("completion", "generate shell completion script")
