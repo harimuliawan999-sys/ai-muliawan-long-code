@@ -45,11 +45,25 @@ export function DialogModel(props: { providerID?: string }) {
           {
             key: item,
             value: { providerID: provider.id, modelID: model.id },
-            title: model.name ?? item.modelID,
+            title: (() => {
+              const id = (model.id ?? "").toLowerCase()
+              if (id.includes("glm-z1") || id.includes("glm-5-1") || id.includes("glm-5.1"))
+                return `▲ POWERFULL AIMLC — ${model.name ?? item.modelID}`
+              if (id.includes("glm"))
+                return `[GLM] ${model.name ?? item.modelID}`
+              return model.name ?? item.modelID
+            })(),
             description: provider.name,
             category,
             disabled: provider.id === "aimlc" && model.id.includes("-nano"),
-            footer: model.cost?.input === 0 && provider.id === "aimlc" ? "Free" : undefined,
+            footer: (() => {
+              const id = (model.id ?? "").toLowerCase()
+              if (id.includes("glm-z1") || id.includes("glm-5-1") || id.includes("glm-5.1"))
+                return "★ Powerfull AIMLC Exclusive"
+              if (id.includes("glm")) return "GLM Model"
+              if (model.cost?.input === 0 && provider.id === "aimlc") return "Free"
+              return undefined
+            })(),
             onSelect: () => {
               onSelect(provider.id, model.id)
             },

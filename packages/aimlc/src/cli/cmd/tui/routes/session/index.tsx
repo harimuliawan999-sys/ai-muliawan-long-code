@@ -165,6 +165,7 @@ export function Session() {
   const [diffWrapMode] = kv.signal<"word" | "none">("diff_wrap_mode", "word")
   const [_animationsEnabled, _setAnimationsEnabled] = kv.signal("animations_enabled", true)
   const [showGenericToolOutput, setShowGenericToolOutput] = kv.signal("generic_tool_output_visibility", false)
+  const [powermodeActive, setPowermodeActive] = kv.signal("powermode_active", false)
 
   const wide = createMemo(() => dimensions().width > 120)
   const sidebarVisible = createMemo(() => {
@@ -475,20 +476,32 @@ export function Session() {
       },
     },
     {
-      title: "▲ AIMLC Powerfull Mode",
+      title: powermodeActive() ? "⬇ Kembali ke Normal Mode" : "▲ AIMLC Powerfull Mode",
       value: "session.powermode",
       category: "AIMLC",
       slash: {
         name: "powerfullmode",
-        aliases: ["powermode", "powerful"],
+        aliases: ["powermode", "powerful", "normalmode"],
       },
       onSelect: (dialog) => {
         dialog.clear()
-        toast.show({
-          variant: "info",
-          message: "▲ AIMLC Powerfull Mode aktif — 6 Intelligence Layers ON • Core terlindungi",
-          duration: 5000,
-        })
+        const entering = !powermodeActive()
+        setPowermodeActive(entering)
+        if (entering) {
+          local.agent.set("powerfull")
+          toast.show({
+            variant: "success",
+            message: "▲ POWERFULL MODE AKTIF — 6 Intelligence Layers ON • Agent: powerfull • Core terlindungi",
+            duration: 6000,
+          })
+        } else {
+          local.agent.set("build")
+          toast.show({
+            variant: "info",
+            message: "Kembali ke mode normal — AIMLC standar aktif",
+            duration: 3000,
+          })
+        }
       },
     },
     {
@@ -1184,6 +1197,20 @@ export function Session() {
               </Show>
               <Show when={session()?.parentID}>
                 <SubagentFooter />
+              </Show>
+              <Show when={powermodeActive()}>
+                <box
+                  flexDirection="row"
+                  paddingLeft={2}
+                  paddingRight={2}
+                  paddingTop={0}
+                  paddingBottom={0}
+                  backgroundColor={"#1a0033"}
+                  justifyContent="space-between"
+                >
+                  <text bold fg={"#ffd700"}>▲ AIMLC POWERFULL MODE AKTIF</text>
+                  <text fg={"#9933ff"}>6 Intelligence Layers ON • Core Terlindungi • /powerfullmode untuk keluar</text>
+                </box>
               </Show>
               <Show when={visible()}>
                 <TuiPluginRuntime.Slot
