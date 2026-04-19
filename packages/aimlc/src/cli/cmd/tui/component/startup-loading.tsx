@@ -5,7 +5,7 @@ import { Spinner } from "./spinner"
 export function StartupLoading(props: { ready: () => boolean }) {
   const theme = useTheme().theme
   const [show, setShow] = createSignal(false)
-  const text = createMemo(() => (props.ready() ? "⚡ Menyiapkan sesi AIMLC..." : "🚀 Memuat AIMLC..."))
+  const text = createMemo(() => (props.ready() ? "Menyiapkan sesi..." : "Memuat AIMLC..."))
   let wait: NodeJS.Timeout | undefined
   let hold: NodeJS.Timeout | undefined
   let stamp = 0
