@@ -12,7 +12,7 @@ import { TuiPluginRuntime } from "../plugin"
 
 let once = false
 const placeholder = {
-  normal: ["Bangun REST API dengan autentikasi JWT", "Analisis dan refactor kode ini", "Tambahkan unit test otomatis untuk project ini"],
+  normal: ["Selesaikan bug dan error di project ini", "Bantu aku perbaiki masalah kode ini", "Temukan dan selesaikan masalah di sini"],
   shell: ["ls -la", "git status", "pwd"],
 }
 
