@@ -62,16 +62,12 @@ export function StartupLoading(props: { ready: () => boolean }) {
       >
         {/* Logo AIMLC */}
         <box flexDirection="column" alignItems="center" marginBottom={2}>
-          <text bold fg={"#ff2222"}>  ─────────────────────────────  </text>
-          <text bold fg={"#ff2222"}>                                  </text>
-          <text bold fg={"#ff3333"}> █████╗ ██╗███╗  ███╗██╗  ██████╗</text>
-          <text bold fg={"#ff3333"}> ██╔══╝ ██║████╗████║██║ ██╔════╝</text>
-          <text bold fg={"#ff4444"}> █████╗ ██║██╔██╔██║██║ ██║     </text>
-          <text bold fg={"#ff4444"}> ██╔══╝ ██║██║╚═╝██║██║ ██║     </text>
-          <text bold fg={"#ff5555"}> ██║    ██║██║   ██║███████╚██████╗</text>
-          <text bold fg={"#ff5555"}> ╚═╝    ╚═╝╚═╝   ╚═╝╚══════╝╚═════╝</text>
-          <text bold fg={"#ff2222"}>                                  </text>
-          <text bold fg={"#ff2222"}>  ─────────────────────────────  </text>
+          <text fg={"#ff2222"}>  ╔══════════════════════════════╗  </text>
+          <text fg={"#ff2222"}>  ║                              ║  </text>
+          <text bold fg={"#ff3333"}>  ║   A  I  M  L  C             ║  </text>
+          <text fg={"#ff3333"}>  ║   AI Muliawan Long Code      ║  </text>
+          <text fg={"#ff2222"}>  ║                              ║  </text>
+          <text fg={"#ff2222"}>  ╚══════════════════════════════╝  </text>
         </box>
 
         {/* Nama & author */}

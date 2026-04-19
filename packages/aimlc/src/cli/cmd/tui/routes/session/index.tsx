@@ -1430,14 +1430,6 @@ function ReasoningPart(props: { last: boolean; part: ReasoningPart; message: Ass
 
   const content = createMemo(() => props.part.text.replace("[REDACTED]", "").trim())
 
-  // Judul singkat: ambil kalimat pertama dari isi pikiran, maks 60 karakter
-  const summary = createMemo(() => {
-    const raw = content()
-    if (!raw) return ""
-    const first = raw.split(/[.\n]/)[0].trim()
-    return first.length > 60 ? first.slice(0, 57) + "..." : first
-  })
-
   createEffect(() => {
     if (props.last && content()) {
       if (!ticker) ticker = setInterval(() => setSpinIdx((i) => (i + 1) % spinFrames.length), 80)
@@ -1458,10 +1450,7 @@ function ReasoningPart(props: { last: boolean; part: ReasoningPart; message: Ass
         gap={1}
       >
         <text fg={"#ff4444"}>{spinFrames[spinIdx()]}</text>
-        <text fg={theme.textMuted} bold>Sedang berpikir</text>
-        <Show when={summary()}>
-          <text fg={theme.textMuted}> — {summary()}</text>
-        </Show>
+        <text fg={theme.textMuted} bold>  Sedang berpikir...</text>
       </box>
     </Show>
   )
