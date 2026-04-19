@@ -157,12 +157,12 @@ const cli = yargs(args)
 
     // Tahan spinner minimal 2.5 detik supaya pesan terbaca
     const elapsed = Date.now() - startTime
-    if (elapsed < 2500) await new Promise(r => setTimeout(r, 2500 - elapsed))
+    if (elapsed < 4000) await new Promise(r => setTimeout(r, 4000 - elapsed))
     if (startupSpinner) clearInterval(startupSpinner)
     if (tty) {
       process.stderr.write("\r" + " ".repeat(60) + "\r")
       process.stderr.write(`${red}✓${reset} ${bold}AIMLC siap digunakan.${reset}` + EOL)
-      await new Promise(r => setTimeout(r, 600))
+      await new Promise(r => setTimeout(r, 1200))
       process.stderr.write("\x1b[?25h")
     }
   })
