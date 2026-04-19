@@ -5,7 +5,18 @@ import { Spinner } from "./spinner"
 export function StartupLoading(props: { ready: () => boolean }) {
   const theme = useTheme().theme
   const [show, setShow] = createSignal(false)
-  const text = createMemo(() => (props.ready() ? "Finishing startup..." : "Loading plugins..."))
+  const messages = ["⚡ Memuat AIMLC...", "🧠 Menginisialisasi AI...", "🔧 Menyiapkan tools...", "🚀 Hampir siap..."]
+  const [msgIdx, setMsgIdx] = createSignal(0)
+  let ticker: NodeJS.Timeout | undefined
+  createEffect(() => {
+    if (!props.ready()) {
+      ticker = setInterval(() => setMsgIdx((i) => (i + 1) % messages.length), 700)
+    } else {
+      if (ticker) { clearInterval(ticker); ticker = undefined }
+    }
+  })
+  onCleanup(() => { if (ticker) clearInterval(ticker) })
+  const text = createMemo(() => (props.ready() ? "✅ Selamat datang di AIMLC!" : messages[msgIdx()]))
   let wait: NodeJS.Timeout | undefined
   let hold: NodeJS.Timeout | undefined
   let stamp = 0

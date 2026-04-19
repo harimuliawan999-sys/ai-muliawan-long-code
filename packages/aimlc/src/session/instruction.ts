@@ -22,8 +22,8 @@ const FILES = [
 
 function globalFiles() {
   const files = []
-  if (Flag.OPENCODE_CONFIG_DIR) {
-    files.push(path.join(Flag.OPENCODE_CONFIG_DIR, "AGENTS.md"))
+  if (Flag.AIMLC_CONFIG_DIR) {
+    files.push(path.join(Flag.AIMLC_CONFIG_DIR, "AGENTS.md"))
   }
   files.push(path.join(Global.Path.config, "AGENTS.md"))
   if (!Flag.OPENCODE_DISABLE_CLAUDE_CODE_PROMPT) {
@@ -87,14 +87,14 @@ export const layer: Layer.Layer<Service, never, AppFileSystem.Service | Config.S
             .globUp(instruction, ctx.directory, ctx.worktree)
             .pipe(Effect.catch(() => Effect.succeed([] as string[])))
         }
-        if (!Flag.OPENCODE_CONFIG_DIR) {
+        if (!Flag.AIMLC_CONFIG_DIR) {
           log.warn(
-            `Skipping relative instruction "${instruction}" - no OPENCODE_CONFIG_DIR set while project config is disabled`,
+            `Skipping relative instruction "${instruction}" - no AIMLC_CONFIG_DIR set while project config is disabled`,
           )
           return []
         }
         return yield* fs
-          .globUp(instruction, Flag.OPENCODE_CONFIG_DIR, Flag.OPENCODE_CONFIG_DIR)
+          .globUp(instruction, Flag.AIMLC_CONFIG_DIR, Flag.AIMLC_CONFIG_DIR)
           .pipe(Effect.catch(() => Effect.succeed([] as string[])))
       })
 

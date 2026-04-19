@@ -474,7 +474,7 @@ export function Session() {
       },
     },
     {
-      title: "Compact session",
+      title: "Kompres Sesi",
       value: "session.compact",
       keybind: "session_compact",
       category: "Session",
@@ -627,7 +627,7 @@ export function Session() {
       },
     },
     {
-      title: showThinking() ? "Hide thinking" : "Show thinking",
+      title: showThinking() ? "Sembunyikan pemikiran" : "Tampilkan pemikiran",
       value: "session.toggle.thinking",
       keybind: "display_thinking",
       category: "Session",
