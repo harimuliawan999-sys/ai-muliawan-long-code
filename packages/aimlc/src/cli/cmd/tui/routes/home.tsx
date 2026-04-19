@@ -12,7 +12,7 @@ import { TuiPluginRuntime } from "../plugin"
 
 let once = false
 const placeholder = {
-  normal: ["Fix a TODO in the codebase", "What is the tech stack of this project?", "Fix broken tests"],
+  normal: ["Perbaiki TODO di codebase ini", "Apa tech stack project ini?", "Perbaiki test yang gagal"],
   shell: ["ls -la", "git status", "pwd"],
 }
 

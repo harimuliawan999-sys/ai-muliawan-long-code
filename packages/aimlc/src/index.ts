@@ -116,6 +116,7 @@ const cli = yargs(args)
     })
 
     const tty = process.stderr.isTTY
+    const startTime = Date.now()
     const red = "\x1b[38;5;196m"
     const muted = "\x1b[0;2m"
     const reset = "\x1b[0m"
@@ -175,11 +176,15 @@ const cli = yargs(args)
         else process.stderr.write(`sqlite-migration:done${EOL}`)
       }
     } else {
+      // Tahan spinner minimal 2 detik supaya pesan terbaca
+      const elapsed = Date.now() - startTime
+      if (elapsed < 2000) await new Promise(r => setTimeout(r, 2000 - elapsed))
       if (startupSpinner) clearInterval(startupSpinner)
       if (tty) process.stderr.write("\r" + " ".repeat(60) + "\r")
     }
     if (tty) {
       process.stderr.write(`${red}✓${reset} ${bold}AIMLC siap digunakan.${reset}` + EOL)
+      await new Promise(r => setTimeout(r, 800))
       process.stderr.write("\x1b[?25h")
     }
   })
