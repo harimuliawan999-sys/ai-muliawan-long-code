@@ -149,40 +149,22 @@ const cli = yargs(args)
 
     const marker = path.join(Global.Path.data, "opencode.db")
     if (!(await Filesystem.exists(marker))) {
-      const width = 36
-      if (startupSpinner) clearInterval(startupSpinner)
-      if (tty) process.stderr.write("\r" + " ".repeat(60) + "\r")
-      let last = -1
-      try {
-        await JsonMigration.run(drizzle({ client: Database.Client().$client }), {
-          progress: (event) => {
-            const percent = Math.floor((event.current / event.total) * 100)
-            if (percent === last && event.current !== event.total) return
-            last = percent
-            if (tty) {
-              const fill = Math.round((percent / 100) * width)
-              const bar = `${"■".repeat(fill)}${"･".repeat(width - fill)}`
-              process.stderr.write(
-                `\r${red}${bar} ${percent.toString().padStart(3)}%${reset} ${muted}${event.label.padEnd(12)} ${event.current}/${event.total}${reset}`,
-              )
-              if (event.current === event.total) process.stderr.write("\n")
-            } else {
-              process.stderr.write(`sqlite-migration:${percent}${EOL}`)
-            }
-          },
-        })
-      } finally {
-        if (tty) process.stderr.write("\x1b[?25h")
-        else process.stderr.write(`sqlite-migration:done${EOL}`)
-      }
-    } else {
-      // Tahan spinner minimal 2 detik supaya pesan terbaca
-      const elapsed = Date.now() - startTime
-      if (elapsed < 2000) await new Promise(r => setTimeout(r, 2000 - elapsed))
-      if (startupSpinner) clearInterval(startupSpinner)
-      if (tty) process.stderr.write("\r" + " ".repeat(60) + "\r")
+      // Migrasi tanpa progress bar — spinner tetap jalan
+      await JsonMigration.run(drizzle({ client: Database.Client().$client }), {
+        progress: () => {}, // sembunyikan progress bar
+      })
     }
-    if (tty) process.stderr.write("\x1b[?25h")
+
+    // Tahan spinner minimal 2.5 detik supaya pesan terbaca
+    const elapsed = Date.now() - startTime
+    if (elapsed < 2500) await new Promise(r => setTimeout(r, 2500 - elapsed))
+    if (startupSpinner) clearInterval(startupSpinner)
+    if (tty) {
+      process.stderr.write("\r" + " ".repeat(60) + "\r")
+      process.stderr.write(`${red}✓${reset} ${bold}AIMLC siap digunakan.${reset}` + EOL)
+      await new Promise(r => setTimeout(r, 600))
+      process.stderr.write("\x1b[?25h")
+    }
   })
   .usage("")
   .completion("completion", "generate shell completion script")
